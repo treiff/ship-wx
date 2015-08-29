@@ -1,0 +1,4 @@
+adapter: mysql2
+username: root
+password: public
+database: ship_wx
