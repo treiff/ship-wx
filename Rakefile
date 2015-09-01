@@ -1,6 +1,10 @@
 require './config/environment'
 
 namespace :db do
+  desc "create the database"
+  task :create do
+
+  end
   desc "migrate the database"
   task :migrate do
     require 'bundler'
@@ -16,8 +20,13 @@ namespace :ship do
     require 'nokogiri'
     require 'open-uri'
 
-    doc = Nokogiri::HTML(open("http://www.ndbc.noaa.gov/ship_obs.php"))
+    # Truncate table before inserting new ships.
+    puts "Truncating ships table \n"
+    Ship.all.each do |ship|
+      ship.destroy
+    end
 
+    doc = Nokogiri::HTML(open("http://www.ndbc.noaa.gov/ship_obs.php"))
     output =[]
     ship_hash = {}
     params = [:hour, :lat, :long, :wdir, :wspd, :gst, :wvht,
@@ -45,10 +54,14 @@ namespace :ship do
     # Insert each ship into db.
     output.each do |ship|
       ship.each_with_index do |field, index|
-        ship_hash[params[index]] = field
+        if index == 1 || index == 2
+          ship_hash[params[index]] = field.to_f
+        else
+          ship_hash[params[index]] = field
+        end
       end
       Ship.create(ship_hash)
     end
-
+    puts "\nTotal ships created: #{ship_hash.length}"
   end
 end
