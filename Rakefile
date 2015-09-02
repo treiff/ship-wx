@@ -62,6 +62,6 @@ namespace :ship do
       end
       Ship.create(ship_hash)
     end
-    puts "\nTotal ships created: #{ship_hash.length}"
+    puts "\nTotal ships created: #{output.length}"
   end
 end
