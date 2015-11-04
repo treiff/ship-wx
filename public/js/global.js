@@ -19,6 +19,7 @@ function initialize() {
         var marker = new google.maps.Marker({
           position: latLng,
           map: map,
+          icon: '../images/ship.png'
         });
         marker.setMap(map);
     });
